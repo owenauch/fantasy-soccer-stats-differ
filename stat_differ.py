@@ -1,6 +1,9 @@
 import requests
 import pandas as pd
 import sys
+import gspread
+from oauth2client.service_account import ServiceAccountCredentials
+import pygsheets
 
 start_week = sys.argv[1]
 end_week = sys.argv[2]
@@ -26,9 +29,9 @@ for pair in duplicates:
     diffed_vals = {}
     for column in pair_diff:
         if (column == "name" or column == "position" or column == "team" or column == "season" or column == "week" or column == "id"):
-          diffed_vals[column] = pair_diff[column].iloc[0]
+            diffed_vals[column] = pair_diff[column].iloc[0]
         else:
-          diffed_vals[column] = pair_diff[column].diff().iloc[1]
+            diffed_vals[column] = pair_diff[column].diff().iloc[1]
     diff_df = diff_df.append(diffed_vals, ignore_index=True)
 
 # delete diffed rows and append diffed df
@@ -36,6 +39,10 @@ flat_list = [item for sublist in duplicates for item in sublist]
 df = df.drop(flat_list)
 df = df.append(diff_df)
 
-# writer = pd.ExcelWriter('output.xlsx')
-df.to_csv("%s-%s.csv" % (start_week, end_week))
-print("Writing to csv!")
+gc = pygsheets.authorize(service_file='client_secret.json')
+sh = gc.open_by_url(
+    'https://docs.google.com/spreadsheets/d/1wY0_kWmvuoFUnVHxOKpkgd18ELMq5wSlaEWoBLe8Cr4/edit?usp=drive_web&ouid=111606700085319731674')
+wks = sh[0]
+wks.set_dataframe(df, "A1")
+print("Sheet updated successfully!")
+
