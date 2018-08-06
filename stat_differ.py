@@ -1,8 +1,6 @@
 import requests
 import pandas as pd
 import sys
-import gspread
-from oauth2client.service_account import ServiceAccountCredentials
 import pygsheets
 
 start_week = sys.argv[1]
@@ -39,10 +37,11 @@ flat_list = [item for sublist in duplicates for item in sublist]
 df = df.drop(flat_list)
 df = df.append(diff_df)
 
-gc = pygsheets.authorize(service_file='client_secret.json')
+gc = pygsheets.authorize(service_file='/Users/owenauch/git/personal_projects/fs_stat_differ/client_secret.json')
 sh = gc.open_by_url(
     'https://docs.google.com/spreadsheets/d/1wY0_kWmvuoFUnVHxOKpkgd18ELMq5wSlaEWoBLe8Cr4/edit?usp=drive_web&ouid=111606700085319731674')
 wks = sh[0]
+wks.rows = df.shape[0]
 wks.set_dataframe(df, "A1")
 print("Sheet updated successfully!")
 
