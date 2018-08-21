@@ -37,11 +37,16 @@ flat_list = [item for sublist in duplicates for item in sublist]
 df = df.drop(flat_list)
 df = df.append(diff_df)
 
-gc = pygsheets.authorize(service_file='/Users/owenauch/git/personal_projects/fs_stat_differ/client_secret.json')
+# drop all rows with all 0s
+df = df[(df.accurateCrosses > 0) | (df.accurateKeeperSweeper > 0) | (df.assists > 0) | (df.chancesCreated > 0) | (df.cleanSheets > 0) | (df.crosses > 0) | (df.effectiveClearances > 0) | (df.goals > 0) | (df.goalsConceded > 0) |
+        (df.interceptions > 0) | (df.passes > 0) | (df.penaltyConceded > 0) | (df.penaltyKickGoals > 0) | (df.redCards > 0) | (df.saves > 0) | (df.shots > 0) | (df.shotsOnGoal > 0) | (df.tacklesWon > 0) | (df.yellowCards > 0) | (df.yellowRedCards > 0)]
+
+# modify google sheet
+gc = pygsheets.authorize(
+    service_file='/Users/owenauch/git/personal_projects/fs_stat_differ/client_secret.json')
 sh = gc.open_by_url(
-    'https://docs.google.com/spreadsheets/d/1nZT3o6FA2_FvG_gJ07O_akQjb1QNDhCKKZvLEwT0-9k/edit#gid=856857167')
+    'https://docs.google.com/spreadsheets/d/1rN3rBjN9oZ0td4oMwwwezelyPuT4dTpAYgInO5qEYpg/edit?usp=drive_web&ouid=111606700085319731674')
 wks = sh[0]
 wks.rows = df.shape[0]
 wks.set_dataframe(df, "A1")
 print("Sheet updated successfully!")
-
