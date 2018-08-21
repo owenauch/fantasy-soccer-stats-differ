@@ -39,7 +39,7 @@ df = df.append(diff_df)
 
 gc = pygsheets.authorize(service_file='/Users/owenauch/git/personal_projects/fs_stat_differ/client_secret.json')
 sh = gc.open_by_url(
-    'https://docs.google.com/spreadsheets/d/1wY0_kWmvuoFUnVHxOKpkgd18ELMq5wSlaEWoBLe8Cr4/edit?usp=drive_web&ouid=111606700085319731674')
+    'https://docs.google.com/spreadsheets/d/1nZT3o6FA2_FvG_gJ07O_akQjb1QNDhCKKZvLEwT0-9k/edit#gid=856857167')
 wks = sh[0]
 wks.rows = df.shape[0]
 wks.set_dataframe(df, "A1")
