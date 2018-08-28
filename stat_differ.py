@@ -15,7 +15,7 @@ df = pd.DataFrame(r.json())
 # get list of list of all duplicate indexes
 duplicates = []
 for index, row in df.iterrows():
-    dups = df.index[df["name"] == row["name"]].tolist()
+    dups = df.index[(df["name"] + df["team"]) == (row["name"] + row["team"])].tolist()
     if (len(dups) > 1 and all(i <= index for i in dups)):
         duplicates.append(dups)
 
@@ -44,8 +44,11 @@ df = df[(df.accurateCrosses > 0) | (df.accurateKeeperSweeper > 0) | (df.assists 
 # modify google sheet
 gc = pygsheets.authorize(
     service_file='/Users/owenauch/git/personal_projects/fs_stat_differ/client_secret.json')
-sh = gc.open_by_url(
-    'https://docs.google.com/spreadsheets/d/1rN3rBjN9oZ0td4oMwwwezelyPuT4dTpAYgInO5qEYpg/edit?usp=drive_web&ouid=111606700085319731674')
+if (len(sys.argv) > 4):
+    sh = gc.open_by_url(sys.argv[4])
+else:
+    sh = gc.open_by_url(
+        'https://docs.google.com/spreadsheets/d/1nZT3o6FA2_FvG_gJ07O_akQjb1QNDhCKKZvLEwT0-9k/edit#gid=0')
 wks = sh[0]
 wks.rows = df.shape[0]
 wks.set_dataframe(df, "A1")
