@@ -9,7 +9,6 @@ season = sys.argv[3]
 url = 'http://localhost:3000/api/Stats?filter={"where": {"and": [{"week": {"inq": [%s, %s]}}, {"season": %s}]}}' % (
     start_week, end_week, season)
 r = requests.get(url)
-print("Stats pulled successfully!")
 df = pd.DataFrame(r.json())
 
 # get list of list of all duplicate indexes
@@ -35,7 +34,11 @@ for pair in duplicates:
 # delete diffed rows and append diffed df
 flat_list = [item for sublist in duplicates for item in sublist]
 df = df.drop(flat_list)
+df = df[df.week != int(start_week)]
 df = df.append(diff_df)
+
+# TEST
+df = diff_df
 
 # drop all rows with all 0s
 df = df[(df.accurateCrosses > 0) | (df.accurateKeeperSweeper > 0) | (df.assists > 0) | (df.chancesCreated > 0) | (df.cleanSheets > 0) | (df.crosses > 0) | (df.effectiveClearances > 0) | (df.goals > 0) | (df.goalsConceded > 0) |
@@ -48,7 +51,7 @@ if (len(sys.argv) > 4):
     sh = gc.open_by_url(sys.argv[4])
 else:
     sh = gc.open_by_url(
-        'https://docs.google.com/spreadsheets/d/1nZT3o6FA2_FvG_gJ07O_akQjb1QNDhCKKZvLEwT0-9k/edit#gid=0')
+        'https://docs.google.com/spreadsheets/d/1Dkp-NZM1T_XXIFdrlvmqDjREU2u843D8a3hzI5AAWgE/edit?usp=drive_web&ouid=111606700085319731674')
 wks = sh[0]
 wks.rows = df.shape[0]
 wks.set_dataframe(df, "A1")
