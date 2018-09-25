@@ -51,7 +51,7 @@ if (len(sys.argv) > 4):
     sh = gc.open_by_url(sys.argv[4])
 else:
     sh = gc.open_by_url(
-        'https://docs.google.com/spreadsheets/d/1Dkp-NZM1T_XXIFdrlvmqDjREU2u843D8a3hzI5AAWgE/edit?usp=drive_web&ouid=111606700085319731674')
+        'https://docs.google.com/spreadsheets/d/1nZT3o6FA2_FvG_gJ07O_akQjb1QNDhCKKZvLEwT0-9k/edit#gid=1683194024')
 wks = sh[0]
 wks.rows = df.shape[0]
 wks.set_dataframe(df, "A1")
